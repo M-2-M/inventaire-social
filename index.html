@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2d5a27">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Inventaire M2M">
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon.png">
+<title>Inventaire M2M</title>
+<style>
+:root{--c:#f5f0e8;--v:#2d5a27;--o:#b8892a;--b:#fff;--n:#000;--r:#b3261e}
+*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;background:var(--c);color:var(--n);font:16px/1.4 -apple-system,system-ui,sans-serif;padding-bottom:110px}
+header{background:var(--b);border-bottom:3px solid var(--o);padding:calc(8px + env(safe-area-inset-top)) 12px 8px;display:flex;align-items:center;gap:10px;}
+#top{position:sticky;top:0;z-index:5}
+header img{width:44px;height:44px}header h1{font-size:18px;margin:0;color:var(--v);flex:1}header small{display:block;color:var(--o);font-weight:400;font-size:12px}
+#sy{font-size:12px;border:1px solid #ccc;border-radius:12px;padding:3px 9px;background:var(--c)}
+nav{background:var(--v);display:flex}
+nav button{flex:1;min-width:0;font-size:10px;background:none;border:0;color:#d8e6d5;padding:8px 1px;font-size:10px}nav button.on{color:#fff;background:#24491f;box-shadow:inset 0 -3px var(--o)}.gb{background:none;border:0;font-size:22px;padding:2px 6px}.bar{height:10px;background:var(--o);border-radius:5px}
+section{padding:12px;max-width:640px;margin:auto}
+button,select,input{font:inherit}
+.bt{background:var(--v);color:#fff;border:0;border-radius:10px;padding:11px 14px;margin:3px 0}.bt.o{background:var(--o)}.bt.g{background:#fff;color:var(--v);border:1px solid var(--v)}.bt.w{width:100%}.bt.r{background:var(--r)}
+input,select{width:100%;padding:10px;border:1px solid #cfc7b4;border-radius:10px;background:#fff;margin:3px 0}
+.card{background:#fff;border-radius:12px;padding:10px 12px;margin:8px 0;box-shadow:0 1px 2px #0002}
+.row{display:flex;gap:8px;align-items:center}.row>*{flex:1}.row>.f0{flex:0 0 auto}
+.md{display:flex;gap:6px}.md button{flex:1;padding:10px 4px;border-radius:10px;border:2px solid var(--v);background:#fff;color:var(--v);font-weight:600}
+.md button.on{background:var(--v);color:#fff}.md button.on.S{background:var(--o);border-color:var(--o)}
+.it{display:flex;align-items:center;gap:8px}.it .n{flex:1}.it small{color:#6b6455;display:block}.q{font-size:22px;font-weight:700;color:var(--v);min-width:44px;text-align:right}.q.low{color:var(--r)}
+.chips button{background:#fff;border:1px solid var(--o);color:#7a5a12;border-radius:16px;padding:5px 10px;margin:2px}
+video{width:100%;border-radius:12px;max-height:260px;background:#000;margin:6px 0}
+#md{position:fixed;inset:0;background:#0007;z-index:9;display:flex;align-items:flex-start;justify-content:center;padding-top:calc(52px + env(safe-area-inset-top))}#md>div{background:var(--c);width:calc(100% - 20px);max-width:620px;max-height:60vh;overflow:auto;border-radius:16px;padding:14px}.mx{position:sticky;top:-14px;text-align:right;margin:-14px -14px 4px;padding:6px 8px;background:var(--c);z-index:1}.mx button{background:none;border:0;font-size:15px;color:#6b6455;padding:6px 8px}
+#to{position:fixed;left:50%;top:80px;transform:translateX(-50%);background:var(--n);color:#fff;padding:10px 16px;border-radius:20px;z-index:20;display:none;max-width:90%;text-align:center}
+.nw{background:#fff7e0;border-left:4px solid var(--o);padding:8px 10px;border-radius:8px;font-size:14px;margin-bottom:8px}
+h3{color:var(--v);margin:6px 0}#hp{position:fixed;left:12px;bottom:calc(14px + env(safe-area-inset-bottom));width:46px;height:46px;border-radius:50%;background:var(--o);color:#fff;border:0;font-size:22px;box-shadow:0 2px 6px #0004;z-index:6}
+textarea{font:inherit;width:100%;padding:10px;border:1px solid #cfc7b4;border-radius:10px;margin:3px 0;background:#fff}#ft{text-align:center;font-size:11px;color:#6b6455;padding:4px 0 8px}
+</style></head><body>
+<div id="top"><header><img src="logo.png" alt="M2M" onclick="go('home')"><h1 onclick="go('home')">Inventaire M2M<small>Musulman(e)s de Meudon</small></h1><span id="sy" onclick="syc()">…</span><button class="gb" onclick="go('set')" aria-label="Réglages">⚙️</button></header><nav id="nv"><button data-t="home" onclick="go('home')">🏠<br>Accueil</button><button data-t="scan" onclick="go('scan')">📷<br>Scanner</button><button data-t="stock" onclick="go('stock')">📦<br>Stock</button><button data-t="col" onclick="go('col')">🛒<br>Collectes</button><button data-t="fam" onclick="go('fam')">👨‍👩‍👧<br>Familles</button><button data-t="hist" onclick="go('hist')">🕘<br>Historique</button><button data-t="idea" onclick="go('idea')">💡<br>Idées</button></nav><div id="up" class="nw" style="margin:0;border-radius:0;text-align:center" hidden>🔄 Nouvelle version <b id="upv"></b> disponible : pense à actualiser la page. <button class="bt o" onclick="location.reload()">Actualiser la page</button></div></div>
+
+<section id="t-home" hidden><div style="text-align:center"><img src="logo.png" width="110" alt=""><h2 style="color:var(--v);margin:4px 0">Inventaire M2M</h2></div><div id="hm"></div></section>
+<section id="t-scan" hidden>
+<div class="md" id="mds"><button data-m="E" onclick="setM('E')">➕ ENTRÉE</button><button data-m="S" onclick="setM('S')">➖ SORTIE</button><button data-m="R" onclick="setM('R')">🔗 RELIER</button></div>
+<div class="nw" id="mh"></div>
+<button class="bt w" onclick="cam()">📷 Scanner avec la caméra</button><video id="vd" playsinline muted hidden></video>
+<div class="row"><input id="cd" inputmode="numeric" placeholder="🔫 douchette ou taper le code"><button class="bt f0" onclick="manual()">OK</button></div>
+<label style="display:flex;gap:8px;align-items:center;font-size:14px;margin:4px 0"><input type="checkbox" id="dou" style="width:auto;margin:0" onchange="D.dou=this.checked;save();rDou();rf()"> 🔫 J’utilise une douchette (le champ reste prêt, on passe au suivant tout seul)</label>
+<button class="bt g w" onclick="newArt('')">＋ Article sans code-barres</button>
+<div id="dst"><div id="pw"><small>Magasin partenaire</small><div class="row"><select id="pt" onchange="D.pt=this.value;save()"></select><button class="bt g f0" id="gp" onclick="parts()">＋ Gérer</button></div><small>Date de la collecte</small><input id="dd" type="date"></div>
+<div id="dsx"><select id="fs" onchange="pickF(this.value)"></select><div id="fi"></div><input id="nt" placeholder="Destination : famille n° / maraude"><div class="chips" id="ch"></div></div></div>
+<div id="ses"></div>
+</section>
+
+<section id="t-stock" hidden>
+<div class="nw">📦 <b>Stock</b> : ce qu’on a. Touche un article pour le modifier ou corriger sa quantité.</div><div class="row"><input id="qs" placeholder="🔍 Chercher (ex. couches)" oninput="rStock()"><select id="qf" class="f0" style="width:auto" onchange="rStock()"></select></div>
+<button class="bt g w" onclick="newArt('')">＋ Nouvel article</button><div id="bs"></div><div id="sl"></div>
+</section>
+
+<section id="t-col" hidden><div class="nw">🛒 <b>Collectes</b> : ce que chaque magasin partenaire a rapporté. Pour <b>enregistrer</b> une collecte : ➕ Entrée, puis choisis le magasin et la date.</div><button class="bt w" onclick="qa('E')">➕ Enregistrer une collecte</button><button class="bt g w" onclick="parts()">🏪 Gérer les magasins partenaires</button><div id="cl"></div></section>
+<section id="t-fam" hidden><div class="nw">👨‍👩‍👧 <b>Familles</b> : un numéro, la composition et ce qui a été donné. Aucun nom. Réservé au bureau.</div><div id="fa"></div><button class="bt w" onclick="fam(0)">＋ Nouvelle famille</button><div id="fl"></div>
+<button class="bt g w" onclick="expF()">💾 Exporter les familles (.json)</button><button class="bt g w" onclick="$('#ff').click()">📥 Importer des familles</button><input id="ff" type="file" accept=".json" hidden onchange="impF(this)"></section>
+<section id="t-hist" hidden><div class="nw">🕘 <b>Historique</b> : qui a fait quoi, et quand. 🗑 annule un mouvement (le stock est corrigé). « Masquer » retire une ligne de la liste, sans rien changer au stock.</div><button class="bt g w" onclick="hxAll()">🧹 Vider la liste de l’historique</button><div id="hl"></div></section>
+
+<section id="t-idea" hidden><div class="nw" id="ih"></div>
+<textarea id="it" rows="3" placeholder="Un mot gentil, une idée, quelque chose qui n’est pas pratique…"></textarea><button class="bt w" onclick="sg()">Envoyer la suggestion</button><div id="ia"></div>
+<div id="vh"><h3>📜 Versions de l’appli</h3><div id="vl"></div></div></section>
+<section id="t-set" hidden>
+<div class="nw">⚙️ <b>Réglages</b> : ton prénom, la connexion au stock partagé et les sauvegardes.</div>
+<h3>👤 Ton prénom</h3><input id="sw" placeholder="Ex. Sabrina K." onchange="setWho(this)">
+<h3>☁️ Stock partagé</h3>
+<div id="cf"><div class="nw">Adresse du script et code d’accès : à saisir une seule fois. Ils ne s’afficheront plus ensuite.</div>
+<input id="su" placeholder="Adresse du script (https://script.google.com/…/exec)" autocapitalize="off" autocorrect="off"><input id="sc" type="password" placeholder="Code d’accès"><button class="bt w" onclick="conn()">🔌 Se connecter</button><button class="bt g w" id="cc" onclick="CHG=false;render()" hidden>Annuler</button></div>
+<div id="cn" hidden><div class="card">🟢 Connecté au stock partagé<br><small>Accès : <b id="rl"></b></small></div><button class="bt w" onclick="sync()">🔄 Synchroniser maintenant</button><button class="bt g w" onclick="chg()">✏️ Changer l’adresse du script ou le code</button><button class="bt g w" onclick="deco()">Se déconnecter</button><button class="bt r w" id="rz" onclick="raz()" hidden>🧹 Effacer les données de test (bureau)</button></div><div id="sm" style="font-size:14px"></div>
+<div id="dn"><h3>💾 Données</h3>
+<button class="bt g w" onclick="csv()">📄 Exporter le stock (CSV)</button>
+<button class="bt g w" onclick="bak()">💾 Sauvegarde complète (.json)</button>
+<button class="bt g w" onclick="$('#fi').click()">📥 Importer une sauvegarde</button><input id="fi" type="file" accept=".json" hidden onchange="imp(this)"></div>
+<p style="font-size:13px;color:#6b6455">Les données restent aussi sur ce téléphone : tu peux travailler sans réseau, la synchronisation se fait dès que la connexion revient. Sur smartphone, l’icône ajoutée à l’écran d’accueil a sa propre mémoire, à configurer une fois (prénom, adresse, code).</p>
+</section>
+
+<div id="ft">Inventaire M2M · <b id="vr"></b></div><button id="hp" onclick="guide(0)" aria-label="Aide">❓</button><div id="md" hidden></div><div id="to"></div>
+
+<script>
+const VER='V10',IDEES_B=false,CL=[['V10','Bénévoles : ils scannent seulement (entrée, sortie, relier), sans accès au stock · prénom : message d’alerte clair avant la connexion · Historique : bouton « Masquer » et nettoyage · un seul message d’accueil dans l’historique'],['V9','⚙️ Changer l’adresse du script ou le code sans se déconnecter · bureau : bouton « Effacer les données de test »'],['V8','Prénom obligatoire · Idées ouvertes à tous les bénévoles, avec réponses du bureau · guide : première connexion et sauvegardes · textes « smartphone »'],['V7','Boutons Fermer/Annuler réparés · nouveau message d’accueil · Collectes 🛒 avec boutons dédiés · douchette · suggestions (bureau) · numéro de version et alerte de mise à jour'],['V6','Stock partagé (Google Sheet), familles, collectes, rôles bureau/bénévole']],$=s=>document.querySelector(s),FAM=['Alimentaire','Hygiène','Fournitures scolaires'];
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fd=t=>new Date(t).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+let D={role:'bureau',pt:'',ev:[],syn:{},url:'',code:'',who:'',mode:'E',ses:[],note:''},S={A:{},Q:{},M:[],P:{},N:{}},tab='scan';
+try{Object.assign(D,JSON.parse(localStorage.m2m||'{}'))}catch(e){}
+function save(){try{localStorage.m2m=JSON.stringify(D)}catch(e){}}
+function toast(t){const e=$('#to');e.textContent=t;e.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>e.style.display='none',2600)}
+function add(e,nosync){if(!D.who){askWho();throw new Error('prenom')}e.who=D.who;e.u=uid();e.t=Date.now();D.ev.push(e);if(!nosync){save();derive();render();sync(1)}}
+const lab=e=>e.n+(e.pv?' · '+e.pv+' '+e.pu:'');
+function derive(){let C=null;const Fm={};const un=new Set(D.ev.filter(e=>e.type=='unmv').map(e=>e.ref)),A={},Q={},M=[],P={},N={},SG={},RP={},HXS=new Set();let hxt=0;
+ [...D.ev].sort((a,b)=>a.t-b.t).forEach(e=>{if(e.type=='art'){if(e.del)delete A[e.id];else{A[e.id]=Object.assign({},e,{lb:lab(e)});N[e.id]=lab(e)}}else if(e.type=='cfg')C=e;else if(e.type=='fam'){if(e.del)delete Fm[e.id];else Fm[e.id]=e}else if(e.type=='part'){if(e.del)delete P[e.id];else P[e.id]=e}else if(e.type=='sug')SG[e.u]=Object.assign({},e,{st:'open'});else if(e.type=='sugx'){if(SG[e.ref])SG[e.ref].st=e.st}else if(e.type=='rep'){(RP[e.ref]=RP[e.ref]||[]).push(e)}else if(e.type=='hx'){if(e.all)hxt=Math.max(hxt,e.upto||0);else if(e.ref)HXS.add(e.ref)}else if(e.type=='mv'&&!un.has(e.u))M.push(e)});
+ M.forEach(e=>{if(A[e.a])Q[e.a]=(Q[e.a]||0)+(e.k=='S'?-e.q:e.q)});F=Fm;S={A,Q,M,P,N,C,SG,RP,HX:HXS,HXT:hxt}}
+const plab=p=>p.n+(p.ville?' · '+p.ville:'');
+function wu(a){if(!a||!a.pv)return null;const v=a.pv,u=a.pu;return u=='kg'?['kg',v]:u=='g'?['kg',v/1000]:u=='L'?['L',v]:u=='cl'?['L',v/100]:['L',v/1000]}
+const uo=x=>['kg','g','L','cl','ml'].map(u=>`<option ${u==x?'selected':''}>${u}</option>`).join('');
+const qty=i=>S.Q[i]||0,byCode=c=>Object.keys(S.A).find(i=>(S.A[i].cs||[]).includes(c));
+function art(id,p){const o=Object.assign({},S.A[id]||{id,fam:FAM[0],cs:[]},p);delete o.lb;o.type='art';o.id=id;add(o)}
+
+/* ---------- navigation ---------- */
+const BH=()=>['stock','col','fam','hist'].concat(IDEES_B?[]:['idea']);
+function go(t){if(!isB()&&BH().includes(t))t='scan';tab=t;stopCam();setTimeout(rf,120);['home','scan','stock','col','fam','hist','idea','set'].forEach(x=>$('#t-'+x).hidden=x!=t);document.querySelectorAll('#nv button').forEach(b=>b.classList.toggle('on',b.dataset.t==t));render()}
+function render(){derive();document.querySelectorAll('#nv button').forEach(b=>{if(BH().includes(b.dataset.t))b.hidden=!isB()});rMode();rDou();rSes();if(tab=='stock')rStock();if(tab=='home')rHome();if(tab=='col')rCol();if(tab=='fam')rFam();if(tab=='hist')rHist();if(tab=='idea')rIdea();if(tab=='set'){$('#sw').value=D.who;const c=D.url&&D.code&&!CHG;$('#cf').hidden=!!c;$('#cn').hidden=!c;$('#cc').hidden=!(D.url&&D.code);$('#rz').hidden=!isB();$('#dn').hidden=!isB();$('#rl').textContent=isB()?'Bureau (tout)':'Bénévole (scanner)'}ss()}
+const HELP={E:'➕ Je range les dons d’une collecte : choisis le magasin partenaire et la date, scanne chaque produit, puis valide.',S:'➖ Je distribue : scanne chaque produit, indique la famille (n°) ou la maraude, puis valide.',R:'🔗 Associer un code-barres à un article. Le stock ne bouge pas.'};
+function setM(m){D.mode=m;save();rMode()}
+function rMode(){document.querySelectorAll('#mds button').forEach(b=>b.className=(b.dataset.m==D.mode?'on ':'')+b.dataset.m);$('#mh').textContent=HELP[D.mode];
+ $('#dst').hidden=D.mode=='R';$('#pw').hidden=D.mode!='E';$('#dsx').hidden=D.mode!='S';if(!$('#dd').value)$('#dd').value=today();rPt();rF();$('#gp').hidden=!isB();
+ $('#ch').innerHTML=['Maraude','Famille n° ','Distribution'].map(x=>`<button onclick="chip('${x}')">${x}</button>`).join('')}
+function rPt(){const e=$('#pt'),v=e.value||D.pt,L=Object.values(S.P).sort((a,b)=>plab(a).localeCompare(plab(b)));e.innerHTML='<option value="">— choisir le magasin —</option>'+L.map(p=>`<option value="${p.id}">${esc(plab(p))}</option>`).join('');if(L.some(p=>p.id==v))e.value=v}
+function parts(){modal(`<h3>Magasins partenaires</h3>${Object.values(S.P).sort((a,b)=>plab(a).localeCompare(plab(b))).map(p=>`<div class="card row"><span>${esc(plab(p))}</span><button class="bt g f0" onclick="rmP('${p.id}')">Retirer</button></div>`).join('')||'<p style="color:#6b6455">Aucun magasin pour l’instant.</p>'}<h3>Ajouter un magasin</h3><input id="pn" placeholder="Nom (ex. Leclerc)"><input id="pv2" placeholder="Ville (ex. Meudon)"><button class="bt w" onclick="addP()">Ajouter</button><button class="bt g w" onclick="fermer()">Fermer</button>`)}
+function addP(){const n=$('#pn').value.trim();if(!n)return toast('Donne le nom du magasin.');const id=uid();D.pt=id;add({type:'part',id,n,ville:$('#pv2').value.trim()});parts();toast('Magasin ajouté ✔')}
+function rmP(id){if(confirm('Retirer ce magasin de la liste ? Les collectes déjà enregistrées restent.')){const n=S.P[id].n;if(D.pt==id)D.pt='';add({type:'part',id,del:true,n});parts()}}
+function askWho(){const m=$('#md');m.innerHTML='<div><h3>👤 Ton prénom</h3><p><b>Sans prénom, tu ne peux pas utiliser l’appli.</b> Il permet de savoir qui a fait quoi. Si deux personnes ont le même prénom, ajoute l’initiale du nom (ex. Sabrina K.).</p><input id="wn" placeholder="Ton prénom" autocapitalize="words"><button class="bt w" onclick="okWho()">Continuer</button></div>';m.hidden=false}
+function okWho(){const v=$('#wn').value.trim();if(v.length<2)return toast('Entre ton prénom.');D.who=v;save();$('#md').hidden=true;render();sync(1);if(!D.tu)guide(0)}
+function setWho(el){const v=el.value.trim();if(v.length<2){toast('Le prénom est obligatoire.');el.value=D.who;return}D.who=v;save()}
+async function conn(){if(!D.who){toast('⚠️ Attention : indique d’abord ton prénom (qui es-tu ?) avant de te connecter.');return askWho()}const u=$('#su').value.trim(),c=$('#sc').value.trim();if(!u||!c)return toast('Saisis l’adresse et le code.');
+ try{const r=await fetch(u,{method:'POST',body:JSON.stringify({code:c,events:[]})}).then(x=>x.json());if(!r.ok)return toast('Code d’accès refusé.');const ro=r.role||'bureau';if(ro!=D.role){D.ev=D.ev.filter(e=>!D.syn[e.u]);D.syn={}}D.role=ro;D.url=u;D.code=c;CHG=false;save();$('#su').value='';$('#sc').value='';st='';render();await sync(1);toast('Connecté ✔')}catch(e){toast('Adresse incorrecte ou pas de connexion.')}}
+let CHG=false;
+function chg(){CHG=true;render();$('#su').focus()}
+async function raz(){if(!D.url||!D.code)return toast('Connecte-toi d’abord.');
+ const t=prompt('⚠️ Cela efface TOUT : stock, articles, familles, historique et idées, sur ce téléphone ET dans le Google Sheet. À utiliser seulement pour effacer les tests. Pour confirmer, écris EFFACER');
+ if(t===null||t.trim().toUpperCase()!='EFFACER')return toast('Annulé : rien n’a été effacé.');
+ try{const r=await fetch(D.url,{method:'POST',body:JSON.stringify({code:D.code,reset:true})}).then(x=>x.json());
+  if(!r.ok||!r.reset)return toast(r.err=='code'?'Code d’accès refusé.':'Rien effacé : le script Google doit être mis à jour (v3).');
+  D.ev=[];D.syn={};D.ses=[];save();derive();render();toast('Tout est effacé ✔')}catch(e){toast('Pas de connexion : rien n’a été effacé.')}}
+function deco(){if(confirm('Se déconnecter du stock partagé ? Les données restent sur ce téléphone.')){D.url='';D.code='';st='';save();render()}}
+function syc(){if(!D.url||!D.code){go('set');toast('Renseigne l’adresse du script et le code pour partager le stock.')}else sync()}
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const fdt=d=>d.split('-').reverse().join('/');
+function chip(x){const n=$('#nt');n.value=x;n.focus()}
+
+/* ---------- scan ---------- */
+let stream,rd,lastC='',lastT=0;
+function stopCam(){try{rd&&rd.reset()}catch(e){}rd=null;if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}$('#vd').hidden=true}
+function loadZX(){return window.ZXing?Promise.resolve():new Promise((ok,ko)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/umd/index.min.js';s.onload=ok;s.onerror=ko;document.head.appendChild(s)})}
+async function cam(){const v=$('#vd');v.hidden=false;
+ try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});v.srcObject=stream;await v.play();
+  const got=c=>{if(c==lastC&&Date.now()-lastT<2500)return;lastC=c;lastT=Date.now();navigator.vibrate&&navigator.vibrate(80);stopCam();onCode(c)};
+  if('BarcodeDetector' in window){const d=new BarcodeDetector({formats:['ean_13','ean_8','upc_a','upc_e','code_128']});rd={reset(){this.x=1}};const loop=async()=>{if(!stream||rd.x)return;try{const r=await d.detect(v);if(r.length)return got(r[0].rawValue)}catch(e){}setTimeout(loop,200)};loop()}
+  else{await loadZX();rd=new ZXing.BrowserMultiFormatReader();rd.decodeFromStream?rd.decodeFromStream(stream,v,r=>{r&&got(r.getText())}):rd.decodeFromVideoDevice(null,v,r=>{r&&got(r.getText())})}
+ }catch(e){stopCam();toast('Caméra indisponible : tape le code à la main.')}}
+function manual(){const c=$('#cd').value.replace(/\D/g,'');if(c){$('#cd').value='';onCode(c);setTimeout(rf,80)}}
+function rDou(){$('#cd').setAttribute('inputmode',D.dou?'none':'numeric');$('#dou').checked=!!D.dou}
+function rf(){if(D.dou&&tab=='scan'&&$('#md').hidden&&!/INPUT|TEXTAREA/.test((document.activeElement||{}).tagName||''))$('#cd').focus()}
+document.addEventListener('keydown',e=>{if(D.dou&&tab=='scan'&&$('#md').hidden&&/^\d$/.test(e.key)&&!/INPUT|TEXTAREA/.test(e.target.tagName))$('#cd').focus()});
+$('#cd').addEventListener('keydown',e=>{if(e.key=='Enter')manual()});
+function onCode(c){const id=byCode(c);
+ if(D.mode=='R'){if(id)return toast('Déjà relié à « '+S.A[id].lb+' »');return picker(c,i=>{link(i,c);toast('Relié ✔')})}
+ if(id)return ses(id);picker(c,i=>{link(i,c,1);ses(i)})}
+function link(i,c){const a=S.A[i];art(i,{cs:[...(a.cs||[]),c]})}
+function ses(id){const x=D.ses.find(s=>s.a==id);x?x.q++:D.ses.push({a:id,q:1});save();rSes();toast('+1 '+S.A[id].lb)}
+function rSes(){const e=$('#ses');if(D.mode=='R'||!D.ses.length){e.innerHTML=D.mode=='R'?'':'<p style="color:#6b6455;text-align:center">Aucun produit scanné pour l’instant.</p>';return}
+ e.innerHTML='<h3>'+(D.mode=='S'?'Sortie':'Entrée')+' en cours</h3>'+D.ses.map((s,i)=>S.A[s.a]?`<div class="card it"><div class="n">${esc(S.A[s.a].lb)}${isB()?`<small>en stock : ${qty(s.a)}</small>`:''}</div><button class="bt g" onclick="sq(${i},-1)">−</button><b>${s.q}</b><button class="bt g" onclick="sq(${i},1)">＋</button></div>`:'').join('')+`<button class="bt w o" onclick="valid()">✅ Valider (${D.ses.reduce((a,s)=>a+s.q,0)} pièces)</button><button class="bt g w" onclick="D.ses=[];save();rSes()">Vider</button>`}
+function sq(i,d){D.ses[i].q+=d;if(D.ses[i].q<1)D.ses.splice(i,1);save();rSes()}
+function valid(){if(!D.who)return askWho();let note=$('#nt').value.trim(),p;const k=D.mode;if(k=='E'){p=$('#pt').value;if(!p)return toast('Choisis le magasin partenaire (ou ajoute-le avec ＋ Gérer).');note=plab(S.P[p])}
+ if(k=='S'&&isB()){const bad=D.ses.filter(s=>qty(s.a)<s.q);if(bad.length&&!confirm('Stock insuffisant pour : '+bad.map(s=>S.A[s.a].lb).join(', ')+'. Valider quand même ?'))return}
+ const dt=k=='E'?($('#dd').value||today()):undefined;D.ses.forEach(s=>add({type:'mv',a:s.a,k,q:s.q,note,dt,p,who:D.who},1));D.ses=[];$('#nt').value='';$('#dd').value=today();save();derive();render();sync(1);toast('Enregistré ✔')}
+
+/* ---------- fenêtres ---------- */
+const DEFMSG='As salam u aleykoum.\nBienvenue sur l’inventaire social de l’association des Musulman(e)s de Meudon.';
+function rHome(){const ids=Object.keys(S.A),tot=ids.reduce((a,i)=>a+Math.max(0,qty(i)),0),low=ids.filter(i=>S.A[i].seuil!=null&&qty(i)<=S.A[i].seuil).length;
+ $('#hm').innerHTML=`<p style="text-align:center;margin:0 0 8px">${D.who?'Bonjour '+esc(D.who)+' 👋':'Bonjour 👋'}</p>
+<div class="card" style="text-align:center;border:1px solid var(--o)"><div style="white-space:pre-wrap">${esc(S.C&&S.C.msg!=null?S.C.msg:DEFMSG)}</div>${isB()?'<button class="bt g" onclick="editMsg()">✏️ Modifier le message</button>':''}</div>
+${isB()?`<div class="row" style="text-align:center"><div class="card"><div class="q" style="text-align:center">${tot}</div><small>pièces en stock</small></div><div class="card"><div class="q" style="text-align:center">${ids.length}</div><small>articles</small></div><div class="card" onclick="go('stock');$('#qf').value='low';rStock()"><div class="q ${low?'low':''}" style="text-align:center">${low}</div><small>⚠️ stock bas</small></div></div>`:''}
+<button class="bt w" onclick="qa('E')">➕ Nouvelle entrée</button><button class="bt w o" onclick="qa('S')">➖ Nouvelle sortie</button>${isB()?'<button class="bt g w" onclick="go(\'stock\')">📦 Voir le stock</button>':''}${isB()?'<button class="bt g w" onclick="go(\'fam\')">👨‍👩‍👧 Familles</button>':''}`}
+function qa(m){go('scan');setM(m)}
+function saveMsg(){const v=$('#mg').value.trim();if(v==(S.C&&S.C.msg!=null?S.C.msg:DEFMSG))return fermer();add({type:'cfg',msg:v});fermer()}
+function editMsg(){modal(`<h3>Message d’accueil</h3><textarea id="mg" rows="6" style="width:100%;padding:10px;border:1px solid #cfc7b4;border-radius:10px;font:inherit">${esc(S.C&&S.C.msg!=null?S.C.msg:DEFMSG)}</textarea><button class="bt w" onclick="saveMsg()">Enregistrer</button>`)}
+const G=[
+['👋 Bienvenue','Cette appli tient le <b>stock des dons</b> de l’association : ce qui entre lors des collectes, ce qui sort lors des distributions. Toi, tu scannes ce qui entre (collectes) et ce qui sort (distributions). Ton prénom est noté à chaque action.'],
+['🔌 Première connexion','Touche la roue crantée <b>⚙️</b> en haut à droite. Ton prénom est déjà noté ; colle l’<b>adresse du script</b> et le <b>code d’accès</b> que le bureau t’a envoyés, puis touche <b>🔌 Se connecter</b>. À faire une seule fois.'],
+['🏠 Accueil','Touche le <b>logo</b> en haut (ou 🏠) pour revenir à l’accueil, avec des raccourcis pour une entrée ou une sortie.'],
+['📷 Scanner','Choisis un mode : <b>➕ ENTRÉE</b> (je range des dons), <b>➖ SORTIE</b> (je distribue) ou <b>🔗 RELIER</b> (associer un code-barres à un article, sans toucher au stock). Scanne avec la caméra, avec une <b>douchette</b> Bluetooth (coche 🔫 : le champ reste prêt après chaque scan) ou tape le code, puis <b>valide</b>. Un code inconnu : relie-le à un article existant ou crée l’article.'],
+['➕ Une entrée','Choisis le <b>magasin partenaire</b> et la <b>date</b> de la collecte. Un magasin manque ? Touche « ＋ Gérer » pour l’ajouter (nom + ville) ou le retirer. Pense au poids : 500 g et 1 kg sont deux articles différents.'],
+['➖ Une sortie','Indique la <b>famille (n°)</b> ou la maraude, puis scanne ce que tu donnes. Le bureau voit la composition de la famille, ses besoins probables et ce qu’elle a déjà reçu, pour ne pas donner deux fois la même chose.'],
+['📦 Stock','Tous les articles et leurs quantités. Cherche par mot, filtre par famille de produits ou <b>⚠️ Stock bas</b>. Touche un article pour le modifier ou <b>corriger</b> la quantité comptée. Le <b>seuil</b> te prévient de ce qui manque avant une collecte.',1],
+['🛒 Collectes','Pour chaque magasin partenaire : combien de pièces et combien de kilos ou de litres ont été collectés, collecte par collecte. Pour <b>enregistrer</b> une collecte, touche « ➕ Enregistrer une collecte » (ou ➕ Entrée dans Scanner). Les magasins se gèrent ici aussi.',1],
+['👨‍👩‍👧 Familles','Une fiche par <b>numéro de famille</b> (aucun nom) : adultes, enfants avec sexe et date de naissance. L’âge se calcule tout seul. La fiche montre aussi ce qui a été donné, quand et par qui.',1],
+['🕘 Historique','Qui a fait quoi, et quand : entrées, sorties, corrections, articles, familles. Le 🗑 annule un mouvement saisi par erreur.',1],
+['💡 Idées','Un mot gentil, une idée, quelque chose qui n’est pas pratique ? Écris-le dans cet onglet : le bureau le lit et te répond.',2],
+['🔄 Mise à jour de l’appli','Quand l’appli est mise à jour, un <b>bandeau</b> apparaît en haut : « Nouvelle version … disponible ». Touche simplement <b>Actualiser la page</b>, il n’y a rien d’autre à faire. Le numéro de ta version est écrit tout en bas.'],
+['💾 Données et sauvegardes','Dans ⚙️ : <b>Sauvegarde complète (.json)</b> = une copie de secours de tout ce qui est sur ton téléphone (utile si tu changes de téléphone). <b>Importer une sauvegarde</b> = remettre cette copie, rien n’est effacé. <b>Exporter le stock (CSV)</b> = le stock en tableau, à ouvrir dans Excel.',1],
+['🟢 Le voyant en haut','⚪ <b>local</b> : pas encore connecté, les données restent sur ce téléphone.<br>🟠 <b>à synchroniser</b> : des changements attendent le réseau.<br>🟢 <b>synchronisé</b> : tout le monde voit les mêmes chiffres.<br>🔴 <b>code refusé</b> : le code d’accès est incorrect.<br>Pour te connecter : ⚙️ puis adresse du script et code (une seule fois).'],
+['💡 Bon à savoir','Sans réseau, tu peux continuer à scanner : tout s’envoie ensuite. Si tu ajoutes l’appli à l’écran d’accueil de ton smartphone, elle a sa propre mémoire : reconnecte-toi une fois dedans. Pour rouvrir ce guide : le bouton ❓ en bas à gauche.']];
+function guide(i){const L=G.filter(g=>isB()||!g[2]||(g[2]==2&&IDEES_B));i=i||0;if(i>=L.length)return fermer();const g=L[i];modal(`<div style="color:#6b6455;font-size:13px">Étape ${i+1} / ${L.length}</div><h3>${g[0]}</h3><p>${g[1]}</p><div class="row">${i?`<button class="bt g" onclick="guide(${i-1})">◀ Précédent</button>`:''}<button class="bt" onclick="guide(${i+1})">${i+1<L.length?'Suivant ▶':'Terminer ✔'}</button></div>`);D.tu=1;save()}
+function modal(h){const m=$('#md');m.innerHTML='<div><div class="mx"><button onclick="fermer()">✖ Fermer</button></div>'+h+'</div>';m.hidden=false}
+function fermer(){if(!D.who)return;$('#md').hidden=true;setTimeout(rf,60)}
+$('#md').addEventListener('click',e=>{if(e.target.id=='md')fermer()});
+let PK=null;
+function picker(c,cb){PK={c,cb};modal(`<h3>Code inconnu</h3><p style="margin:0 0 6px">${c?'<b>'+esc(c)+'</b><br>':''}Relier à un article existant :</p><input id="pq" placeholder="🔍 Chercher (ex. riz)" oninput="pl()"><div id="pls"></div><button class="bt w o" onclick="newArt(PK.c,PK.cb)">＋ Créer un nouvel article</button><button class="bt g w" onclick="fermer()">Annuler</button>`);pl()}
+function pl(){const q=norm($('#pq').value),L=Object.keys(S.A).filter(i=>!q||norm(S.A[i].lb).includes(q)).sort((a,b)=>S.A[a].lb.localeCompare(S.A[b].lb)).slice(0,30);
+ $('#pls').innerHTML=L.map(i=>`<button class="bt g w" style="text-align:left" onclick="pick('${i}')">${esc(S.A[i].lb)} <small>· ${esc(S.A[i].fam)}</small></button>`).join('')}
+function pick(i){const cb=PK.cb,c=PK.c;fermer();cb(i)}
+function newArt(c,cb){window.NA={c,cb};modal(`<h3>Nouvel article</h3><input id="an" placeholder="Nom (ex. Couches taille 3)"><select id="af">${FAM.map(f=>`<option>${f}</option>`).join('')}</select><input id="al" placeholder="Lieu de stockage (facultatif)"><div class="row"><input id="ap" type="number" step="any" inputmode="decimal" placeholder="Poids / contenance (ex. 1)"><select id="au" class="f0" style="width:auto">${uo('kg')}</select></div><input id="as" type="number" min="0" inputmode="numeric" placeholder="Seuil de stock bas (facultatif)"><button class="bt w" onclick="mk()">Créer</button><button class="bt g w" onclick="fermer()">Annuler</button>`);$('#an').focus()}
+function mk(){const n=$('#an').value.trim();if(!n)return toast('Donne un nom.');const id=uid(),s=$('#as').value;
+ art(id,{n,fam:$('#af').value,lieu:$('#al').value.trim(),seuil:s===''?null:+s,pv:+$('#ap').value||null,pu:$('#au').value,cs:NA.c?[NA.c]:[]});fermer();if(NA.cb)NA.cb(id)}
+function edit(id){const a=S.A[id];modal(`<h3>${esc(a.lb)}</h3><div class="card">En stock : <b>${qty(id)}</b><div class="row"><input id="ec" type="number" inputmode="numeric" placeholder="Quantité réelle comptée"><button class="bt f0 o" onclick="corr('${id}')">Corriger</button></div></div>
+<input id="en" value="${esc(a.n)}"><select id="ef">${FAM.map(f=>`<option ${f==a.fam?'selected':''}>${f}</option>`).join('')}</select><input id="el" value="${esc(a.lieu)}" placeholder="Lieu de stockage"><div class="row"><input id="ep" type="number" step="any" inputmode="decimal" value="${a.pv||''}" placeholder="Poids / contenance"><select id="eu" class="f0" style="width:auto">${uo(a.pu||'kg')}</select></div><input id="es" type="number" inputmode="numeric" value="${a.seuil==null?'':a.seuil}" placeholder="Seuil de stock bas">
+<p style="font-size:13px">Codes-barres : ${(a.cs||[]).map((c,i)=>`${esc(c)} <a href="#" onclick="dc('${id}',${i});return false">✖</a>`).join(' · ')||'aucun'}</p>
+<button class="bt w" onclick="se('${id}')">Enregistrer</button><button class="bt g w" onclick="fermer()">Fermer</button><button class="bt r w" onclick="del('${id}')">Supprimer l’article</button>`)}
+function se(id){const s=$('#es').value;art(id,{n:$('#en').value.trim()||S.A[id].n,fam:$('#ef').value,lieu:$('#el').value.trim(),seuil:s===''?null:+s,pv:+$('#ep').value||null,pu:$('#eu').value});fermer()}
+function dc(id,i){const cs=[...S.A[id].cs];cs.splice(i,1);art(id,{cs});edit(id)}
+function corr(id){const v=$('#ec').value;if(v==='')return;const d=+v-qty(id);if(d)add({type:'mv',a:id,k:'C',q:d,note:'Correction',who:D.who});fermer();toast('Stock corrigé')}
+function del(id){if(confirm('Supprimer « '+S.A[id].lb+' » ?'))art(id,{del:true}),fermer()}
+
+/* ---------- listes ---------- */
+function rBes(){$('#bs').innerHTML=isB()&&Object.keys(F).length?`<div class="nw">👨‍👩‍👧 <b>Besoins des familles</b><br>${aggTxt(agg())}</div>`:''}
+function rStock(){rBes();const f=$('#qf');if(!f.options.length)f.innerHTML='<option value="">Toutes</option><option value="low">⚠️ Stock bas</option>'+FAM.map(x=>`<option>${x}</option>`).join('');
+ const q=norm($('#qs').value),L=Object.keys(S.A).filter(i=>(!q||norm(S.A[i].lb).includes(q))&&(!f.value||(f.value=='low'?(S.A[i].seuil!=null&&qty(i)<=S.A[i].seuil):S.A[i].fam==f.value))).sort((a,b)=>(S.A[a].fam+S.A[a].lb).localeCompare(S.A[b].fam+S.A[b].lb));
+ $('#sl').innerHTML=L.map(i=>{const a=S.A[i],low=a.seuil!=null&&qty(i)<=a.seuil;return`<div class="card it" onclick="edit('${i}')"><div class="n">${esc(a.lb)}<small>${esc(a.fam)}${a.lieu?' · '+esc(a.lieu):''}${low?' · ⚠️ sous le seuil':''}</small></div><div class="q ${low?'low':''}">${qty(i)}</div></div>`}).join('')||'<p style="text-align:center;color:#6b6455">Aucun article.</p>'}
+let F={};
+const mo=m=>{const n=new Date(),[y,k]=m.split('-').map(Number);return n.getFullYear()*12+n.getMonth()+1-(y*12+k)};
+const age=m=>{const d=mo(m);return d<1?'moins d’1 mois':d<24?d+' mois':Math.floor(d/12)+' ans'};
+const isB=()=>D.role!='benevole',cx=s=>s=='F'?'fille':'garçon';
+function agg(){const A={n:0,f:0,h:0,i:0,e0:0,e1:0,e3:0,e6:0,e12:0,fi:0,ga:0};Object.values(F).forEach(f=>{A.n++;f.ad.forEach(x=>{if(x=='F'){A.f++;A.i++}else A.h++});f.en.forEach(c=>{const d=mo(c.b);A[d<12?'e0':d<36?'e1':d<72?'e3':d<144?'e6':'e12']++;if(c.s=='F'&&d>=120)A.i++;if(d>=36&&d<216){c.s=='F'?A.fi++:A.ga++}})});return A}
+function aggTxt(A){const e=A.e0+A.e1+A.e3+A.e6+A.e12;return `<b>${A.n}</b> familles · ${A.f} femmes, ${A.h} hommes · ${e} enfants (${A.e0} de moins d’1 an, ${A.e1} de 1-2 ans, ${A.e3} de 3-5, ${A.e6} de 6-11, ${A.e12} de 12+)<br>👶 <b>${A.e0+A.e1}</b> enfants de moins de 3 ans (couches, lait infantile)<br>🩸 <b>${A.i}</b> femmes et filles de 10 ans et + (hygiène intime)<br>🎒 ${A.fi} filles et ${A.ga} garçons de 3 à 17 ans (fournitures)`}
+const famTxt=f=>`${f.ad.filter(x=>x=='F').length} femme(s), ${f.ad.filter(x=>x=='M').length} homme(s)${f.en.length?' · enfants : '+f.en.map(c=>cx(c.s)+' '+age(c.b)).join(', '):''}`;
+function hint(f){const d=f.en.map(c=>mo(c.b)),h=[];if(d.some(x=>x<36))h.push('👶 couches');if(d.some(x=>x<12))h.push('🍼 lait infantile');if(f.ad.includes('F')||f.en.some(c=>c.s=='F'&&mo(c.b)>=120))h.push('🩸 hygiène intime');const sc=f.en.filter(c=>mo(c.b)>=36&&mo(c.b)<216);if(sc.length)h.push(`🎒 fournitures scolaires (${sc.filter(c=>c.s=='F').length} fille(s), ${sc.filter(c=>c.s=='M').length} garçon(s))`);return h.join(' · ')}
+const fnum=n=>{const m=/famille\D*(\d+)/.exec(norm(n));return m?+m[1]:0};
+function recv(n){return S.M.filter(m=>m.k=='S'&&fnum(m.note)==n&&S.A[m.a]).reverse()}
+function pickF(n){if(!n){$('#fi').innerHTML='';return}const f=F[n];$('#nt').value='Famille n° '+n;if(!f){$('#fi').innerHTML='';return}const r=recv(n),j=r.length?Math.floor((Date.now()-r[0].t)/864e5):0;
+ $('#fi').innerHTML=`<div class="nw"><b>Famille n° ${n}</b> : ${famTxt(f)}<br>${hint(f)}${r.length?`<br>🕘 Dernière distribution : ${j==0?'aujourd’hui':'il y a '+j+' j'} (${esc(r[0].who||'?')})<br><small>${r.slice(0,5).map(m=>fd(m.t)+' · '+m.q+' × '+esc(S.A[m.a].lb)+' · '+esc(m.who||'?')).join('<br>')}</small>`:'<br>Rien reçu pour l’instant.'}</div>`}
+function rF(){const e=$('#fs'),L=Object.keys(F).map(Number).sort((a,b)=>a-b);e.hidden=!L.length||!isB();const v=e.value;e.innerHTML='<option value="">Famille n° …</option>'+L.map(n=>`<option>${n}</option>`).join('');e.value=v}
+function rFam(){const L=Object.values(F).sort((a,b)=>a.n-b.n);$('#fa').innerHTML=L.length?`<div class="nw">${aggTxt(agg())}</div>`:'';
+ $('#fl').innerHTML=L.map(f=>{const r=recv(f.n)[0];return`<div class="card it" onclick="fam(${f.n})"><div class="n"><b>Famille n° ${f.n}</b><small>${famTxt(f)}${r?' · dernière distribution '+fd(r.t):''}</small></div></div>`}).join('')||'<p style="text-align:center;color:#6b6455">Aucune famille pour l’instant.</p>'}
+let FM={},FE=0;
+function fam(n){FE=n;FM=n?{n:F[n].n,ad:[...F[n].ad],en:F[n].en.map(c=>({...c}))}:{n:Math.max(0,...Object.keys(F).map(Number))+1,ad:[],en:[]};famForm()}
+function famForm(){modal(`<h3>Famille n° <input id="fn" type="number" inputmode="numeric" value="${FM.n}" style="width:90px;display:inline-block" onchange="FM.n=+this.value"></h3>
+<p style="margin:4px 0">Adultes :</p><div class="chips">${FM.ad.map((x,i)=>`<button onclick="FM.ad.splice(${i},1);famForm()">${x=='F'?'femme':'homme'} ✖</button>`).join('')}</div>
+<div class="row"><button class="bt g" onclick="FM.ad.push('F');famForm()">＋ Femme</button><button class="bt g" onclick="FM.ad.push('M');famForm()">＋ Homme</button></div>
+<p style="margin:8px 0 2px">Enfants (sexe, mois et année de naissance) :</p>${FM.en.map((c,i)=>`<div class="row card"><span>${cx(c.s)} · ${age(c.b)} <small>(${c.b})</small></span><button class="bt g f0" onclick="FM.en.splice(${i},1);famForm()">✖</button></div>`).join('')}
+<div class="row"><input id="fb" type="month"><select id="fx" class="f0" style="width:auto"><option value="F">Fille</option><option value="M">Garçon</option></select><button class="bt o f0" onclick="addE()">＋</button></div>
+${FE?`<h3>Déjà reçu</h3>${recv(FE).slice(0,30).map(m=>`<div class="row"><span>${fd(m.t)} · ${esc(S.A[m.a].lb)} <small>(${esc(m.who||'?')})</small></span><b class="f0">${m.q}</b></div>`).join('')||'<p style="color:#6b6455;margin:0">Rien pour l’instant.</p>'}`:''}
+<button class="bt w" onclick="saveFam()">Enregistrer</button><button class="bt g w" onclick="fermer()">Annuler</button>${FE?'<button class="bt r w" onclick="delFam()">Supprimer cette famille</button>':''}`)}
+function addE(){const v=$('#fb').value;if(!v)return toast('Choisis le mois et l’année de naissance.');FM.en.push({b:v,s:$('#fx').value});FM.en.sort((a,b)=>b.b.localeCompare(a.b));famForm()}
+function saveFam(){const n=+($('#fn').value||FM.n);if(!n||n<1)return toast('Numéro de famille invalide.');if(n!=FE&&F[n])return toast('Ce numéro existe déjà.');if(FE&&n!=FE)add({type:'fam',id:String(FE),n:FE,del:true},1);add({type:'fam',id:String(n),n,ad:FM.ad,en:FM.en});fermer();rFam()}
+function delFam(){if(confirm('Supprimer la famille n° '+FE+' ?'))add({type:'fam',id:String(FE),n:FE,del:true}),fermer(),rFam()}
+function expF(){dl('familles_M2M.json',JSON.stringify(Object.values(F).map(f=>({n:f.n,ad:f.ad,en:f.en}))),'application/json')}
+function impF(el){const f=el.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result);let k=0;j.forEach(f=>{if(f.n&&!F[f.n]&&Array.isArray(f.ad)&&Array.isArray(f.en)){add({type:'fam',id:String(f.n),n:f.n,ad:f.ad,en:f.en},1);k++}});save();render();sync(1);toast(k+' familles importées')}catch(e){toast('Fichier illisible')}};r.readAsText(f);el.value=''}
+const fw=x=>String(Math.round(x*10)/10).replace('.',','),tw=o=>[o.kg?fw(o.kg)+' kg':'',o.L?fw(o.L)+' L':''].filter(Boolean).join(' · ');
+function rCol(){const by={},ky={};
+ S.M.filter(m=>m.k=='E').forEach(m=>{const l=(m.note||'Sans magasin').trim(),k=norm(l),d=m.dt||new Date(m.t).toISOString().slice(0,10),w=wu(S.A[m.a]);
+  [by[k]=by[k]||{l,q:0,kg:0,L:0},ky[k+'|'+d]=ky[k+'|'+d]||{l,d,q:0,kg:0,L:0,it:{}}].forEach(o=>{o.q+=m.q;if(w)o[w[0]]+=w[1]*m.q});ky[k+'|'+d].it[m.a]=(ky[k+'|'+d].it[m.a]||0)+m.q});
+ const L=Object.values(by).sort((x,y)=>y.q-x.q),mx=L.length?L[0].q:1,C=Object.values(ky).sort((x,y)=>y.d.localeCompare(x.d));
+ if(!C.length){$('#cl').innerHTML='<div class="nw">🛒 Ici, on voit ce qui a été collecté, magasin par magasin. Fais une ➕ ENTRÉE en choisissant le magasin partenaire et la date.</div>';return}
+ $('#cl').innerHTML='<h3>Où collecte-t-on le plus ?</h3>'+L.map(x=>`<div class="card"><div class="row"><b>${esc(x.l)}</b><b class="f0">${x.q} pièces</b></div><small>${tw(x)}</small><div class="bar" style="width:${Math.max(4,Math.round(100*x.q/mx))}%"></div></div>`).join('')
+ +'<h3>Chaque collecte</h3>'+C.map(c=>{const ids=Object.keys(c.it).filter(i=>S.A[i]).sort((x,y)=>c.it[y]-c.it[x]),F={};ids.forEach(i=>F[S.A[i].fam]=(F[S.A[i].fam]||0)+c.it[i]);
+  return`<details class="card"><summary><b>${esc(c.l)}</b> · ${fdt(c.d)} · <b>${c.q}</b> pièces${tw(c)?' · ≈ '+tw(c):''}<br><small>${Object.keys(F).map(f=>esc(f)+' : '+F[f]).join(' · ')}</small></summary>${ids.map(i=>`<div class="row" style="margin-top:4px"><span>${esc(S.A[i].lb)}</span><b class="f0">${c.it[i]}</b></div>`).join('')}</details>`}).join('')}
+function rHist(){const ev=[...D.ev].sort((a,b)=>a.t-b.t),un={},seen={},rows=[];ev.forEach(e=>{if(e.type=='unmv')un[e.ref]=e});
+ ev.forEach(e=>{let t='';
+  if(e.type=='mv'){t=`${{E:'➕ Entrée',S:'➖ Sortie',C:'✏️ Correction'}[e.k]} : ${e.q} × ${esc(S.N[e.a]||'article supprimé')}${e.note?' · '+esc(e.note):''}${e.dt?' · collecte du '+fdt(e.dt):''}`;if(un[e.u])t='<s>'+t+'</s><br>↩️ annulé par '+esc(un[e.u].who||'?')}
+  else if(e.type=='art'){t=e.del?'🗑 Article supprimé : '+esc(e.n):seen[e.id]?'✏️ Article modifié : '+esc(lab(e)):'🆕 Article créé : '+esc(lab(e));seen[e.id]=1}
+  else if(e.type=='fam'){t=e.del?'🗑 Famille n° '+e.n+' supprimée':seen['f'+e.id]?'✏️ Famille n° '+e.n+' modifiée':'🆕 Famille n° '+e.n+' créée';seen['f'+e.id]=1}
+  else if(e.type=='cfg'){if(S.C&&e.u!=S.C.u)return;t='✏️ Message d’accueil modifié'}
+  else if(e.type=='part')t=e.del?'🏪 Magasin retiré : '+esc(e.n):'🏪 Magasin ajouté : '+esc(e.n)+(e.ville?' · '+esc(e.ville):'');
+  else return;if(!S.HX.has(e.u)&&e.t>S.HXT)rows.push({e,t})});
+ $('#hl').innerHTML=rows.reverse().slice(0,200).map(({e,t})=>`<div class="card it"><div class="n">${t}<small>${fd(e.t)} · ${esc(e.who||'?')}</small></div>${e.type=='mv'&&!un[e.u]?`<button class="bt g f0" onclick="um('${e.u}')">🗑</button>`:`<button class="bt g f0" onclick="hx('${e.u}')">Masquer</button>`}</div>`).join('')||'<p style="text-align:center;color:#6b6455">Rien pour l’instant.</p>'}
+function sg(){const t=$('#it').value.trim();if(!t)return toast('Écris ta suggestion.');add({type:'sug',txt:t});$('#it').value='';toast('Suggestion enregistrée ✔')}
+function sx(u,st){add({type:'sugx',ref:u,st})}
+function rIdea(){const B=isB();$('#ih').innerHTML=B?'💡 <b>Idées</b> : les mots, idées et soucis de l’équipe. Réponds-leur avec 💬, marque ✔ quand c’est fait.':'💡 <b>Idées</b> : un mot gentil, une idée, quelque chose qui n’est pas pratique ? Écris-le ici, le bureau te répond.';$('#vh').hidden=!B;
+ const L=Object.values(S.SG).filter(x=>x.st!='del').sort((a,b)=>(a.st=='done')-(b.st=='done')||b.t-a.t);
+ $('#ia').innerHTML=L.map(x=>`<div class="card" style="${x.st=='done'?'opacity:.65':''}"><div style="white-space:pre-wrap">${esc(x.txt)}</div><small>${esc(x.who||'?')} · ${fd(x.t)}${x.st=='done'?' · ✅ fait':''}</small>${(S.RP[x.u]||[]).map(r=>`<div class="nw" style="margin:6px 0 0">💬 <b>${esc(r.who||'Bureau')}</b> : ${esc(r.txt)}<br><small>${fd(r.t)}</small></div>`).join('')}${B?`<div class="row"><button class="bt g" onclick="rp('${x.u}')">💬 Répondre</button><button class="bt g" onclick="sx('${x.u}','${x.st=='done'?'open':'done'}')">${x.st=='done'?'↩️ Rouvrir':'✔ Fait'}</button><button class="bt g" onclick="sx('${x.u}','del')">🗑</button></div>`:''}</div>`).join('')||'<p style="text-align:center;color:#6b6455">Aucune suggestion pour l’instant.</p>';
+ $('#vl').innerHTML=CL.map(v=>`<div class="card"><b>${v[0]}</b>${v[0]==VER?' (la tienne)':''}<br><small>${v[1]}</small></div>`).join('')}
+function rp(u){modal(`<h3>Répondre</h3><div class="card" style="white-space:pre-wrap">${esc(S.SG[u].txt)}</div><textarea id="rt" rows="3" placeholder="Ex. Merci pour ton retour, je regarde si c’est possible !"></textarea><button class="bt w" onclick="rp2('${u}')">Envoyer la réponse</button><button class="bt g w" onclick="fermer()">Annuler</button>`)}
+function rp2(u){const t=$('#rt').value.trim();if(!t)return toast('Écris ta réponse.');add({type:'rep',ref:u,txt:t});fermer();toast('Réponse envoyée ✔')}
+function hx(u){add({type:'hx',ref:u})}
+function hxAll(){if(confirm('Retirer toutes les lignes actuelles de l’historique ? Le stock et les familles ne changent pas : seule la liste est vidée.')){add({type:'hx',all:true,upto:Date.now()});toast('Historique nettoyé ✔')}}
+function um(u){if(confirm('Annuler ce mouvement ?'))add({type:'unmv',ref:u})}
+
+/* ---------- synchronisation ---------- */
+let busy=false,st='';
+function ss(){const e=$('#sy');if(!D.who){e.textContent='⚠️ prénom ?';e.style.color='#b3261e'}else if(!D.url||!D.code){e.textContent='⚪ local';e.style.color='#6b6455'}else if(st=='ok'){e.textContent='🟢 synchronisé';e.style.color='#2d5a27'}else if(st=='bad'){e.textContent='🔴 code refusé';e.style.color='#b3261e'}else{e.textContent='🟠 à synchroniser';e.style.color='#b8892a'}
+ const m=$('#sm');if(m)m.textContent=st=='ok'?'Dernière synchronisation : '+fd(D.last):st=='bad'?'Le code d’accès est refusé.':st=='off'?'Pas de connexion ou adresse incorrecte.':''}
+async function sync(q){if(!D.who||busy||!D.url||!D.code)return ss();busy=true;
+ try{const ev=D.ev.filter(e=>!D.syn[e.u]);
+  const r=await fetch(D.url,{method:'POST',body:JSON.stringify({code:D.code,events:ev})}).then(x=>x.json());
+  if(!r.ok){st='bad';ss();return}
+  ev.forEach(e=>D.syn[e.u]=1);if(r.role)D.role=r.role;const have=new Set(D.ev.map(e=>e.u));r.events.forEach(e=>{if(!have.has(e.u))D.ev.push(e);D.syn[e.u]=1});st='ok';D.last=Date.now();save();derive();render()}
+ catch(e){st='off';ss();if(!q)toast('Hors connexion : les données restent sur ce téléphone.')}
+ busy=false}
+window.addEventListener('online',()=>sync(1));document.addEventListener('visibilitychange',()=>{if(!document.hidden)sync(1)});setInterval(()=>{if(!document.hidden)sync(1)},60000);
+
+/* ---------- export ---------- */
+function dl(n,t,m){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:m}));a.download=n;a.click()}
+function csv(){const q=x=>'"'+String(x==null?'':x).replace(/"/g,'""')+'"',L=['Famille;Article;Poids;Lieu;Stock;Seuil;Codes-barres'];
+ Object.keys(S.A).sort((a,b)=>(S.A[a].fam+S.A[a].lb).localeCompare(S.A[b].fam+S.A[b].lb)).forEach(i=>{const a=S.A[i];L.push([q(a.fam),q(a.n),q(a.pv?a.pv+' '+a.pu:''),q(a.lieu),qty(i),a.seuil==null?'':a.seuil,q((a.cs||[]).join(' '))].join(';'))});dl('stock_M2M.csv','\uFEFF'+L.join('\n'),'text/csv')}
+function bak(){dl('sauvegarde_M2M_'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify({ev:D.ev}),'application/json')}
+function imp(el){const f=el.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result),have=new Set(D.ev.map(e=>e.u));let n=0;(j.ev||[]).forEach(e=>{if(e.u&&!have.has(e.u)){D.ev.push(e);n++}});save();render();sync(1);toast(n+' éléments importés')}catch(e){toast('Fichier illisible')}};r.readAsText(f);el.value=''}
+
+$('#vr').textContent='version '+VER;
+async function chk(){try{const t=await fetch('index.html?'+Date.now(),{cache:'no-store'}).then(r=>r.text()),m=/const VER='([^']+)'/.exec(t);if(m&&m[1]!=VER){$('#upv').textContent=m[1];$('#up').hidden=false}}catch(e){}}
+setTimeout(chk,3000);setInterval(()=>{if(!document.hidden)chk()},300000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk()});
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+go('home');if(!D.who)askWho();else{sync(1);if(!D.tu)guide(0)}
+</script></body></html>
