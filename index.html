@@ -25,7 +25,7 @@ input,select{width:100%;padding:10px;border:1px solid #cfc7b4;border-radius:10px
 .md button.on{background:var(--v);color:#fff}.md button.on.S{background:var(--o);border-color:var(--o)}
 .it{display:flex;align-items:center;gap:8px}.it .n{flex:1}.it small{color:#6b6455;display:block}.q{font-size:22px;font-weight:700;color:var(--v);min-width:44px;text-align:right}.q.low{color:var(--r)}
 .chips button{background:#fff;border:1px solid var(--o);color:#7a5a12;border-radius:16px;padding:5px 10px;margin:2px}
-video{width:100%;border-radius:12px;max-height:260px;background:#000;margin:6px 0}
+video{width:100%;border-radius:12px;max-height:260px;background:#000;margin:6px 0}.cam{position:relative;overflow:hidden;border-radius:12px;margin:6px 0}.cam video{height:250px;max-height:none;object-fit:cover;display:block;margin:0;border-radius:0}.cam i{position:absolute;left:8%;top:30%;width:84%;height:40%;border:3px solid #fff;border-radius:10px;box-shadow:0 0 0 999px rgba(0,0,0,.5);pointer-events:none;transition:border-color .15s}.cam.ok i{border-color:#3ddc5a}.cam::after{content:"Place le code-barres dans le cadre";position:absolute;bottom:6px;left:0;right:0;text-align:center;color:#fff;font-size:14px;pointer-events:none}#tl{position:absolute;right:8px;top:8px;width:42px;height:42px;border-radius:50%;border:0;background:#0009;color:#fff;font-size:20px;padding:0}
 #md{position:fixed;inset:0;background:#0007;z-index:9;display:flex;align-items:flex-start;justify-content:center;padding-top:calc(52px + env(safe-area-inset-top))}#md>div{background:var(--c);width:calc(100% - 20px);max-width:620px;max-height:60vh;overflow:auto;border-radius:16px;padding:14px}.mx{position:sticky;top:-14px;text-align:right;margin:-14px -14px 4px;padding:6px 8px;background:var(--c);z-index:1}.mx button{background:none;border:0;font-size:15px;color:#6b6455;padding:6px 8px}
 #to{position:fixed;left:50%;top:80px;transform:translateX(-50%);background:var(--n);color:#fff;padding:10px 16px;border-radius:20px;z-index:20;display:none;max-width:90%;text-align:center}
 .nw{background:#fff7e0;border-left:4px solid var(--o);padding:8px 10px;border-radius:8px;font-size:14px;margin-bottom:8px}
@@ -38,7 +38,7 @@ textarea{font:inherit;width:100%;padding:10px;border:1px solid #cfc7b4;border-ra
 <section id="t-scan" hidden>
 <div class="md" id="mds"><button data-m="E" onclick="setM('E')">➕ ENTRÉE</button><button data-m="S" onclick="setM('S')">➖ SORTIE</button><button data-m="R" onclick="setM('R')">🔗 RELIER</button></div>
 <div class="nw" id="mh"></div>
-<button class="bt w" onclick="cam()">📷 Scanner avec la caméra</button><video id="vd" playsinline muted hidden></video>
+<button class="bt w" id="cb" onclick="cam()">📷 Scanner avec la caméra</button><div class="cam" id="cw" hidden><video id="vd" playsinline muted></video><i></i><button id="tl" hidden onclick="torch()">🔦</button></div><small id="ch2" style="display:block;text-align:center;color:#6b6455" hidden>La caméra reste ouverte : scanne les produits les uns après les autres. Tiens le code à 10–15 cm, bien éclairé.</small>
 <div class="row"><input id="cd" inputmode="numeric" placeholder="🔫 douchette ou taper le code"><button class="bt f0" onclick="manual()">OK</button></div>
 <label style="display:flex;gap:8px;align-items:center;font-size:14px;margin:4px 0"><input type="checkbox" id="dou" style="width:auto;margin:0" onchange="D.dou=this.checked;save();rDou();rf()"> 🔫 J’utilise une douchette (le champ reste prêt, on passe au suivant tout seul)</label>
 <button class="bt g w" onclick="newArt('')">＋ Article sans code-barres</button>
@@ -77,7 +77,7 @@ textarea{font:inherit;width:100%;padding:10px;border:1px solid #cfc7b4;border-ra
 <div id="ft">Inventaire M2M · <b id="vr"></b></div><button id="hp" onclick="guide(0)" aria-label="Aide">❓</button><div id="md" hidden></div><div id="to"></div>
 
 <script>
-const VER='V10',IDEES_B=false,CL=[['V10','Bénévoles : ils scannent seulement (entrée, sortie, relier), sans accès au stock · prénom : message d’alerte clair avant la connexion · Historique : bouton « Masquer » et nettoyage · un seul message d’accueil dans l’historique'],['V9','⚙️ Changer l’adresse du script ou le code sans se déconnecter · bureau : bouton « Effacer les données de test »'],['V8','Prénom obligatoire · Idées ouvertes à tous les bénévoles, avec réponses du bureau · guide : première connexion et sauvegardes · textes « smartphone »'],['V7','Boutons Fermer/Annuler réparés · nouveau message d’accueil · Collectes 🛒 avec boutons dédiés · douchette · suggestions (bureau) · numéro de version et alerte de mise à jour'],['V6','Stock partagé (Google Sheet), familles, collectes, rôles bureau/bénévole']],$=s=>document.querySelector(s),FAM=['Alimentaire','Hygiène','Fournitures scolaires'];
+const VER='V11',IDEES_B=false,CL=[['V11','Scan caméra refait : cadre de visée, lecture plus fiable, caméra qui reste ouverte pour scanner à la chaîne (bip + vibration), lampe si le téléphone la permet · un code-barres n’est plus relié deux fois au même article'],['V10','Bénévoles : ils scannent seulement (entrée, sortie, relier), sans accès au stock · prénom : message d’alerte clair avant la connexion · Historique : bouton « Masquer » et nettoyage · un seul message d’accueil dans l’historique'],['V9','⚙️ Changer l’adresse du script ou le code sans se déconnecter · bureau : bouton « Effacer les données de test »'],['V8','Prénom obligatoire · Idées ouvertes à tous les bénévoles, avec réponses du bureau · guide : première connexion et sauvegardes · textes « smartphone »'],['V7','Boutons Fermer/Annuler réparés · nouveau message d’accueil · Collectes 🛒 avec boutons dédiés · douchette · suggestions (bureau) · numéro de version et alerte de mise à jour'],['V6','Stock partagé (Google Sheet), familles, collectes, rôles bureau/bénévole']],$=s=>document.querySelector(s),FAM=['Alimentaire','Hygiène','Fournitures scolaires'];
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
 const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -130,15 +130,23 @@ const fdt=d=>d.split('-').reverse().join('/');
 function chip(x){const n=$('#nt');n.value=x;n.focus()}
 
 /* ---------- scan ---------- */
-let stream,rd,lastC='',lastT=0;
-function stopCam(){try{rd&&rd.reset()}catch(e){}rd=null;if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}$('#vd').hidden=true}
-function loadZX(){return window.ZXing?Promise.resolve():new Promise((ok,ko)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/umd/index.min.js';s.onload=ok;s.onerror=ko;document.head.appendChild(s)})}
-async function cam(){const v=$('#vd');v.hidden=false;
- try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});v.srcObject=stream;await v.play();
-  const got=c=>{if(c==lastC&&Date.now()-lastT<2500)return;lastC=c;lastT=Date.now();navigator.vibrate&&navigator.vibrate(80);stopCam();onCode(c)};
-  if('BarcodeDetector' in window){const d=new BarcodeDetector({formats:['ean_13','ean_8','upc_a','upc_e','code_128']});rd={reset(){this.x=1}};const loop=async()=>{if(!stream||rd.x)return;try{const r=await d.detect(v);if(r.length)return got(r[0].rawValue)}catch(e){}setTimeout(loop,200)};loop()}
-  else{await loadZX();rd=new ZXing.BrowserMultiFormatReader();rd.decodeFromStream?rd.decodeFromStream(stream,v,r=>{r&&got(r.getText())}):rd.decodeFromVideoDevice(null,v,r=>{r&&got(r.getText())})}
- }catch(e){stopCam();toast('Caméra indisponible : tape le code à la main.')}}
+let stream,timer=0,zr,det,SCH=0,SCB=0,lastC='',lastT=0,lastA=0,actx,trch=0;
+function stopCam(){clearInterval(timer);timer=0;SCH=0;if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}trch=0;const w=$('#cw');if(w)w.hidden=true;const h=$('#ch2');if(h)h.hidden=true;const b=$('#cb');if(b)b.textContent='📷 Scanner avec la caméra'}
+function loadZX(){return window.ZXing?Promise.resolve():new Promise((ok,ko)=>{const s=document.createElement('script');s.src=ZX;s.onload=ok;s.onerror=ko;document.head.appendChild(s)})}
+const ZX='https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/umd/index.min.js';
+function eanOK(c){if(!/^\d+$/.test(c)||![8,12,13].includes(c.length))return false;const d=c.split('').map(Number),k=d.pop();let t=0;d.reverse().forEach((x,i)=>t+=x*(i%2?1:3));return(10-t%10)%10==k}
+function beep(){try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=1200;g.gain.value=.15;o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+.09)}catch(e){}}
+function torch(){try{trch=!trch;stream.getVideoTracks()[0].applyConstraints({advanced:[{torch:!!trch}]})}catch(e){}}
+async function cam(){if(stream||SCB){stopCam();SCB=0;return}SCB=1;
+ const w=$('#cw'),v=$('#vd');w.hidden=false;$('#ch2').hidden=false;$('#cb').textContent='⏹ Arrêter la caméra';beep.o=0;try{actx=actx||new(window.AudioContext||window.webkitAudioContext)()}catch(e){}
+ try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:1280},height:{ideal:720}}});v.srcObject=stream;await v.play()}catch(e){stopCam();SCB=0;return toast('Caméra refusée ou indisponible : tape le code à la main.')}
+ try{const tk=stream.getVideoTracks()[0],cp=tk.getCapabilities?tk.getCapabilities():{};if(cp.focusMode&&cp.focusMode.includes('continuous'))tk.applyConstraints({advanced:[{focusMode:'continuous'}]}).catch(()=>{});$('#tl').hidden=!cp.torch}catch(e){}
+ try{if('BarcodeDetector'in window){det=new BarcodeDetector({formats:['ean_13','ean_8','upc_a','upc_e']});zr=null}else{await loadZX();const h=new Map();h.set(ZXing.DecodeHintType.POSSIBLE_FORMATS,[ZXing.BarcodeFormat.EAN_13,ZXing.BarcodeFormat.EAN_8,ZXing.BarcodeFormat.UPC_A,ZXing.BarcodeFormat.UPC_E]);h.set(ZXing.DecodeHintType.TRY_HARDER,true);zr=new ZXing.MultiFormatReader();zr.setHints(h);det=null}}catch(e){stopCam();SCB=0;return toast('Scan indisponible (réseau ?) : tape le code à la main.')}
+ const cv=document.createElement('canvas'),cx=cv.getContext('2d',{willReadFrequently:true});SCB=0;
+ timer=setInterval(async()=>{if(SCH||!timer||!v.videoWidth||!$('#md').hidden)return;SCH=1;
+  try{const vw=v.videoWidth,vh=v.videoHeight,sc=Math.max(v.clientWidth/vw,v.clientHeight/vh),rw=Math.min(vw,.84*v.clientWidth/sc),rh=Math.min(vh,.40*v.clientHeight/sc);cv.width=rw;cv.height=rh;cx.drawImage(v,(vw-rw)/2,(vh-rh)/2,rw,rh,0,0,rw,rh);
+   let c;if(det){const r=await det.detect(cv);c=r[0]&&r[0].rawValue}else{try{c=zr.decode(new ZXing.BinaryBitmap(new ZXing.HybridBinarizer(new ZXing.HTMLCanvasElementLuminanceSource(cv)))).getText()}catch(e){}}
+   if(c&&eanOK(c)){const n=Date.now();if(!(c==lastC&&n-lastT<2200)&&n-lastA>700){lastC=c;lastT=lastA=n;navigator.vibrate&&navigator.vibrate(80);beep();w.classList.add('ok');setTimeout(()=>w.classList.remove('ok'),350);onCode(c)}}}catch(e){}SCH=0},220)}
 function manual(){const c=$('#cd').value.replace(/\D/g,'');if(c){$('#cd').value='';onCode(c);setTimeout(rf,80)}}
 function rDou(){$('#cd').setAttribute('inputmode',D.dou?'none':'numeric');$('#dou').checked=!!D.dou}
 function rf(){if(D.dou&&tab=='scan'&&$('#md').hidden&&!/INPUT|TEXTAREA/.test((document.activeElement||{}).tagName||''))$('#cd').focus()}
@@ -147,7 +155,7 @@ $('#cd').addEventListener('keydown',e=>{if(e.key=='Enter')manual()});
 function onCode(c){const id=byCode(c);
  if(D.mode=='R'){if(id)return toast('Déjà relié à « '+S.A[id].lb+' »');return picker(c,i=>{link(i,c);toast('Relié ✔')})}
  if(id)return ses(id);picker(c,i=>{link(i,c,1);ses(i)})}
-function link(i,c){const a=S.A[i];art(i,{cs:[...(a.cs||[]),c]})}
+function link(i,c){const a=S.A[i];art(i,{cs:[...new Set([...(a.cs||[]),c])]})}
 function ses(id){const x=D.ses.find(s=>s.a==id);x?x.q++:D.ses.push({a:id,q:1});save();rSes();toast('+1 '+S.A[id].lb)}
 function rSes(){const e=$('#ses');if(D.mode=='R'||!D.ses.length){e.innerHTML=D.mode=='R'?'':'<p style="color:#6b6455;text-align:center">Aucun produit scanné pour l’instant.</p>';return}
  e.innerHTML='<h3>'+(D.mode=='S'?'Sortie':'Entrée')+' en cours</h3>'+D.ses.map((s,i)=>S.A[s.a]?`<div class="card it"><div class="n">${esc(S.A[s.a].lb)}${isB()?`<small>en stock : ${qty(s.a)}</small>`:''}</div><button class="bt g" onclick="sq(${i},-1)">−</button><b>${s.q}</b><button class="bt g" onclick="sq(${i},1)">＋</button></div>`:'').join('')+`<button class="bt w o" onclick="valid()">✅ Valider (${D.ses.reduce((a,s)=>a+s.q,0)} pièces)</button><button class="bt g w" onclick="D.ses=[];save();rSes()">Vider</button>`}
